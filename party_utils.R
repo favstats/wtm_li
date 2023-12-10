@@ -78,17 +78,17 @@ if(sets$cntry %in% country_codes & nrow(thedat)!=0){
 } else {
   polsample <- readRDS("../data/polsample.rds")
   partycolorsdataset  <- readRDS("../data/partycolorsdataset.rds")
- 
- color_dat <- polsample %>% 
-   # count(cntry, partyfacts_id, sort = T) %>% View()
-   filter(cntry == sets$cntry) %>%
-   select(party = name_short, partyfacts_id) %>% 
-   distinct(partyfacts_id, party) %>% 
-   left_join(partycolorsdataset %>% mutate(partyfacts_id = as.character(partyfacts_id))) %>% 
-   select(party, color = hex)  %>% 
-   setColors() %>% 
-   rename(colors = color) %>% 
-   drop_na(party)
+  
+  color_dat <- polsample %>% 
+    # count(cntry, partyfacts_id, sort = T) %>% View()
+    filter(cntry == sets$cntry) %>%
+    select(party = name_short, partyfacts_id) %>% 
+    distinct(partyfacts_id, party) %>% 
+    left_join(partycolorsdataset %>% mutate(partyfacts_id = as.character(partyfacts_id))) %>% 
+    select(party, color = hex)  %>% 
+    setColors() %>% 
+    rename(colors = color) %>% 
+    drop_na(party)
 }
 
 saveRDS(color_dat, "../data/color_dat.rds")
@@ -141,7 +141,8 @@ if(sets$cntry %in% country_codes & nrow(thedat)!=0){
     election_dat30 <- tibble()
   } else {
     election_dat30 <- raw %>% 
-      drop_na(party)
+      drop_na(party) %>% 
+      filter(party %in% color_dat$party)
   }
   
   
@@ -155,7 +156,8 @@ if(sets$cntry %in% country_codes & nrow(thedat)!=0){
     election_dat7 <- tibble()
   } else {
     election_dat7 <- raw %>% 
-      drop_na(party) 
+      drop_na(party)  %>% 
+      filter(party %in% color_dat$party)
   }
   
 }
@@ -177,7 +179,7 @@ tibble(fin,
   write_csv("../data/dates.csv")
 
 
-
+s
 # Function to create Dutch date strings with suffixes
 create_date <- function(x) {
   the_date <- format(x, "%e %b") # %e for day of the month without leading zeros, %B for full month name in Dutch
