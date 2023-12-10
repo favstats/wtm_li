@@ -26,7 +26,7 @@ options(scipen = 999)
 setColors <- function(df) {
   # Check if the 'color' column exists
   if (!"color" %in% names(df)) {
-    stop("The dataframe does not have a 'color' column.")
+    df <- df %>% mutate(color = NA)
   }
   
   # Function to generate a random color
@@ -72,7 +72,7 @@ if(sets$cntry %in% country_codes & nrow(thedat)!=0){
     map_dfr(as_tibble) %>% 
     drop_na(id) %>% 
     rename(party = short_name) %>% 
-    select(party, color) %>% 
+    select(party, contains("color")) %>% 
     setColors() %>% 
     rename(colors = color)
 } else {
